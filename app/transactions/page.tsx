@@ -7,7 +7,7 @@ import { transactionscolumns } from "./_columns";
 const TransactionsPage = async () => {
   const transactions = await db.transactions.findMany({});
   return (
-    <div>
+    <div className="space-y-6 p-6">
       {/*TITULO E BOTÃO */}
       <div className="flex w-full items-center justify-between p-6">
         <h1 className="text-2xl font-bold">Transações</h1>
