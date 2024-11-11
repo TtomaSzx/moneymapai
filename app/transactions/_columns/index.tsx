@@ -3,28 +3,12 @@
 import { Transaction } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import TransactionTypeBadge from "../_components/type-badge";
-
-export const TRANSACTION_CATEGORY_LABELS = {
-  EDUCATION: "Educação",
-  ENTERTAINMENT: "Entretenimento",
-  FOOD: "Alimentação",
-  HEALTH: "Saúde",
-  HOUSING: "Moradia",
-  OTHER: "Outros",
-  SALARY: "Salário",
-  TRANSPORTATION: "Transporte",
-  UTILITY: "Utilidades",
-};
-
-export const TRANSACTION_PAYMENT_METHOD_LABELS = {
-  BANK_TRANSFER: "Transferência bancária",
-  BANK_SLIP: "Boleto bancário",
-  CASH: "Dinheiro",
-  CREDIT_CARD: "Cartão de crédito",
-  DEBIT_CARD: "Cartão de débito",
-  OTHER: "Outros",
-  PIX: "Pix",
-};
+import { Button } from "@/app/_components/ui/button";
+import { PencilIcon, TrashIcon } from "lucide-react";
+import {
+  TRANSACTION_CATEGORY_LABELS,
+  TRANSACTION_PAYMENT_METHOD_LABELS,
+} from "@/app/_constants/transactions";
 
 export const transactionscolumns: ColumnDef<Transaction>[] = [
   {
@@ -50,16 +34,49 @@ export const transactionscolumns: ColumnDef<Transaction>[] = [
     cell: ({ row: { original: transaction } }) =>
       TRANSACTION_PAYMENT_METHOD_LABELS[transaction.paymentMethod],
   },
+
   {
     accessorKey: "date",
     header: "Data",
+    cell: ({ row: { original: transaction } }) =>
+      new Date(transaction.data).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      }),
   },
   {
     accessorKey: "amount",
     header: "Valor",
+    cell: ({ row: { original: transaction } }) =>
+      new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(Number(transaction.amount)),
   },
   {
     accessorKey: "actions",
-    header: "",
+    header: "Ações",
+    cell: () => {
+      return (
+        <div className="space-x-1">
+          <Button
+            variant={"ghost"}
+            size={"icon"}
+            className="text-muted-foreground"
+          >
+            <PencilIcon />
+          </Button>
+
+          <Button
+            variant={"ghost"}
+            size={"icon"}
+            className="text-muted-foreground"
+          >
+            <TrashIcon />
+          </Button>
+        </div>
+      );
+    },
   },
 ];
